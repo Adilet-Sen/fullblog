@@ -12,5 +12,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/prof', 'HomeController@prof');
+
 Route::get('/about', 'HomeController@about');
+Route::get('/contact', 'HomeController@contact');
+
+Route::get('/articles/{slug}', 'HomeController@showPost');
+Route::get('/category/{slug}', 'HomeController@category');
+Route::get('/tag/{slug}', 'HomeController@tag');
+
+Route::group(['middleware' => 'guest'], function (){
+    Route::get('/register', 'AuthController@registerShow');
+    Route::post('/register', 'AuthController@register');
+    Route::get('/login','AuthController@loginShow')->name('login');
+    Route::post('/login', 'AuthController@login');
+});
+
+Route::group(['middleware'	=>	'auth'], function(){
+    Route::get('/profile', 'ProfileController@index');
+    Route::post('/profile', 'ProfileController@store');
+    Route::get('/logout', 'AuthController@logout');
+    Route::post('/comment', 'CommentsController@store');
+});
+
+//, 'middleware'	=>	'admin'
+Route::group(['prefix'=>'admin','namespace'=>'Admin'], function(){
+    Route::get('/', 'DashboardController@index')->name('admin');
+    Route::resource('/categories', 'CategoriesController');
+    Route::resource('/tags', 'TagsController');
+    Route::resource('/users', 'UsersController');
+    Route::resource('/posts', 'PostsController');
+    Route::get('/comments', 'CommentsController@index');
+    Route::get('/comments/toggle/{id}', 'CommentsController@toggle');
+    Route::delete('/comments/{id}/destroy', 'CommentsController@destroy')->name('comments.destroy');
+    Route::resource('/subscribers', 'SubcriptionsController');
+});

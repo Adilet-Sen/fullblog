@@ -18,4 +18,29 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function confirmation()
+    {
+        $this->status = 1;
+        $this->save();
+    }
+
+    public function disconfirmation()
+    {
+        $this->status = 0;
+        $this->save();
+    }
+
+    public function switchingStatus()
+    {
+        if ($this->status == 0){
+            return $this->confirmation();
+        }
+        return $this->disconfirmation();
+    }
+
+    public function delete()
+    {
+        $this->delete();
+    }
 }
