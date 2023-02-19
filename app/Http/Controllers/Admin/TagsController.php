@@ -36,7 +36,8 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Tag::create($request->all());
+        return redirect()->back();
     }
 
     /**
