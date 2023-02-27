@@ -38,9 +38,9 @@
                                 <td>{{$user->email}}</td>
                                 <td>
                                     @if($user->is_admin)
-                                        <i class="bi bi-bookmark-star-fill"></i>
+                                        <i class="bi bi-check-circle-fill"></i>
                                     @else
-                                        <i class="bi bi-bookmark-x-fill"></i>
+                                        <i class="bi bi-x-circle-fill"></i>
                                     @endif
                                 </td>
                                 <td>
@@ -51,7 +51,12 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="/admin/posts/edit/" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                    <form class="d-flex align-items-center" method="POST" action="{{route('users.destroy', [$user->id])}}">
+                                        <a href="{{route('users.edit',[$user->id])}}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                        @method('delete')
+                                        @csrf
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

@@ -34,9 +34,13 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
-        //
+        $user = User::add($request->all());
+        $user->generatePassword($request->get('password'));
+        $user->uploadAvatar($request->file('avatar'));
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -56,9 +60,9 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('admin.user.edit');
+        return view('admin.user.edit',['user'=>User::find($id)]);
     }
 
     /**
@@ -68,9 +72,15 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUsersRequest $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        $user->edit($request->all());
+        $user->generatePassword($request->get('password'));
+        $user->uploadAvatar($request->file('avatar'));
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -79,8 +89,10 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        return redirect()->back();
     }
 }

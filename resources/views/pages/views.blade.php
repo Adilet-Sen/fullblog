@@ -26,15 +26,16 @@
 
                 <div class="post-entry-horzontal">
                   <a href="/articles/{{$post->slug}}">
-                    <div class="image element-animate" data-animate-effect="fadeIn" style="background-image: url(/images/img_10.jpg);"></div>
+                    <div class="image element-animate" data-animate-effect="fadeIn" style="background-image: url(/{{$post->getImage()}});"></div>
                     <span class="text">
                       <div class="post-meta">
-                        <span class="author mr-2"><img src="/images/person_1.jpg" alt="Colorlib"> {{$post->author->name}}</span>
-                        <span class="mr-2">{{$post->created_at}} </span>
-                        <span class="mr-2">{{$post->category->name}}</span>
-                        <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                        <span class="author mr-2"><img src="/{{$post->author->getImage()}}" alt="Colorlib"></span>
+                        <span class="mr-2">Date:{{$post->getDate()}}</span>
+                        <span class="mr-2">Category:{{$post->category->name}}</span>
+                        <span class="ml-2"><span class="fa fa-comments"></span>-{{$post->comments()->count()}}</span>
                       </div>
-                      <h2>{{$post->description}}</h2>
+                        <p>Author:{{$post->author->name}}</p>
+                      <h2>Title:{{$post->title}}</h2>
                     </span>
                   </a>
                 </div>

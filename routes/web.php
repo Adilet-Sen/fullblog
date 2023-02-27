@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PostsController;
+use App\Http\Controllers\Admin\CommentsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,38 +16,38 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::get('/prof', 'HomeController@prof');
-
 Route::get('/about', 'HomeController@about');
 Route::get('/contact', 'HomeController@contact');
+Route::post('/contact/store', 'HomeController@contactStore');
 
 Route::get('/articles/{slug}', 'HomeController@showPost');
 Route::get('/category/{slug}', 'HomeController@category');
 Route::get('/tag/{slug}', 'HomeController@tag');
 
-Route::group(['middleware' => 'guest'], function (){
+Route::group(['middleware' => 'guest'], function () {
     Route::get('/register', 'AuthController@registerShow');
     Route::post('/register', 'AuthController@register');
-    Route::get('/login','AuthController@loginShow')->name('login');
+    Route::get('/login', 'AuthController@loginShow')->name('login');
     Route::post('/login', 'AuthController@login');
 });
 
-Route::group(['middleware'	=>	'auth'], function(){
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', 'ProfileController@index');
     Route::post('/profile', 'ProfileController@store');
     Route::get('/logout', 'AuthController@logout');
-    Route::post('/comment', 'CommentsController@store');
+    Route::post('/comments/{id}', 'CommentsController@store');
 });
 
-//, 'middleware'	=>	'admin'
-Route::group(['prefix'=>'admin','namespace'=>'Admin'], function(){
+//
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'DashboardController@index')->name('admin');
+    Route::get('/profile', 'DashboardController@profile');
+    Route::get('/posts/switch/{id}/{value?}', [PostsController::class, 'switch']); // Для изменения status и featured
+    Route::get('/comments/switch/{id}', [CommentsController::class, 'switch']);
     Route::resource('/categories', 'CategoriesController');
     Route::resource('/tags', 'TagsController');
     Route::resource('/users', 'UsersController');
     Route::resource('/posts', 'PostsController');
-    Route::get('/comments', 'CommentsController@index');
-    Route::get('/comments/toggle/{id}', 'CommentsController@toggle');
-    Route::delete('/comments/{id}/destroy', 'CommentsController@destroy')->name('comments.destroy');
+    Route::resource('/comments', 'CommentsController');
     Route::resource('/subscribers', 'SubcriptionsController');
 });

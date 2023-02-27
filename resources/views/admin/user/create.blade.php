@@ -19,30 +19,31 @@
                     <h5 class="card-title">Add User</h5>
 
                     <!-- General Form Elements -->
-                    <form>
+                    <form action="{{route('users.store')}}" method="post" enctype="multipart/form-data">
+                        @csrf
                         <div class="row mb-3">
                             <label for="inputText" class="col-sm-2 col-form-label">Name:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control">
+                                <input name="name" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="inputText" class="col-sm-2 col-form-label">Email:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control">
+                                <input name="email" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="inputText" class="col-sm-2 col-form-label">Password:</label>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control">
+                                <input name="password" type="password" class="form-control">
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
+                            <label for="inputNumber" class="col-sm-2 col-form-label">Upload Avatar:</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="file" id="formFile">
+                                <input name="avatar" class="form-control" type="file" id="formFile">
                             </div>
                         </div>
 

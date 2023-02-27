@@ -33,12 +33,16 @@
                                 <td>{{$comment->message}}</td>
                                 <td>{{$comment->author->name}}</td>
                                 <td>
-                                    @if($comment->status)
-                                        <a href="/admin/posts/edit/" class="btn btn-success"><i class="bi bi-check-circle-fill"></i></a>
-                                    @else
-                                        <a href="/admin/posts/edit/" class="btn btn-warning"><i class="bi bi-x-circle-fill"></i></a>
-                                    @endif
-                                    <a href="/admin/posts/edit/" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                    <form action="{{route('comments.destroy', [$comment->id])}}" method="POST">
+                                        @method('delete')
+                                        @csrf
+                                        @if($comment->status)
+                                            <a href="/admin/comments/switch/{{$comment->id}}" class="btn btn-success"><i class="bi bi-check-circle-fill"></i></a>
+                                        @else
+                                            <a href="/admin/comments/switch/{{$comment->id}}" class="btn btn-warning"><i class="bi bi-x-circle-fill"></i></a>
+                                        @endif
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

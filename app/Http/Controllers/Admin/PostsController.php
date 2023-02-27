@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PostsRequest;
+use App\Http\Requests\Admin\UpdatePostsRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -16,7 +19,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return view('admin.posts.index',['posts'=>Post::paginate(25)]);
+        return view('admin.posts.index', ['posts' => Post::orderBy('id', 'desc')->paginate(25)]);
     }
 
     /**
@@ -26,24 +29,41 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create', ['categories'=> Category::withDepth()->with('ancestors')->get()]);
+        return view('admin.posts.create', [
+            'categories' => Category::withDepth()->with('ancestors')->get(),
+            'tags' => Tag::all(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostsRequest $request)
     {
         $post = Post::add($request->all());
+        $post->uploadImage($request->file('image'));
+        $post->setCategory($request->get('category_id'));
+        $post->setTags($request->get('tags'));
+        $post->setStatus($request->get('status'));
+        $post->setFeature($request->get('featured'));
+
+        return redirect()->route('posts.index');
+    }
+
+    public function switch($id, $value = null)
+    {
+        $post = Post::find($id);
+        $post->switchStatus();
+        return redirect()->back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
@@ -54,34 +74,48 @@ class PostsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return view('admin.posts.edit',['post'=>Post::find($id)]);
+        return view('admin.posts.edit', [
+            'post' => Post::find($id),
+            'categories' => Category::withDepth()->with('ancestors')->get(),
+            'tags' => Tag::all(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostsRequest $request, $id)
     {
-        dd($request);
+        $post = Post::find($id);
+        $post->edit($request->all());
+        $post->uploadImage($request->file('image'));
+        $post->setCategory($request->get('category_id'));
+        $post->setTags($request->get('tags'));
+        $post->setStatus($request->get('status'));
+        $post->setFeature($request->get('featured'));
+
+        return redirect()->route('posts.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete_post();
+        return redirect()->back();
     }
 }

@@ -41,9 +41,6 @@ class CategoriesController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $this->validate($request, [
-            'name'	=>	'required' //обязательно
-        ]);
         $category = Category::create([
             'name' => $request->category
         ]);

@@ -12,15 +12,15 @@
                         <div>
                             <a href="/articles/{{$post->slug}}" class="a-block d-flex align-items-center height-lg" style="background-image: url('{{$post->image}}'); ">
                                 <div class="text half-to-full">
-                                    <span class="category mb-5">{{$post->category->name}}</span>
+                                    <span class="category mb-5">@if($post->hasCategory()) {{$post->category->name}} @else Нет категории. @endif</span>
                                     <div class="post-meta">
 
-                                        <span class="author mr-2"><img src="{{$post->author->avatar}}" alt="Colorlib"> {{$post->author->name}}</span>&bullet;
-                                        <span class="mr-2">{{$post->created_at}}</span> &bullet;
-                                        <span class="ml-2"><span class="fa fa-comments"></span> </span>
-
+                                        <span class="author mr-2"><img src="/{{$post->author->getImage()}}" alt="Colorlib"></span>&bullet;
+                                        <span class="mr-2">Date:{{$post->getDate()}}</span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span>-{{$post->comments()->count()}}</span>
+                                        <p>Author:{{$post->getAuthorName()}}</p>
                                     </div>
-                                    <h3>{{$post->title}}</h3>
+                                    <h3>Title:{{$post->title}}</h3>
                                     <p>{{$post->description}}</p>
                                 </div>
                             </a>
@@ -47,16 +47,21 @@
             <div class="col-md-12 col-lg-8 main-content">
               <div class="row">
                   @foreach($posts as $post)
+
                 <div class="col-md-6">
                   <a href="/articles/{{$post->slug}}" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                    <img src="{{$post->image}}" alt="Image placeholder">
+                    <img src="/{{$post->getImage()}}" alt="Image placeholder">
                     <div class="blog-content-body">
                       <div class="post-meta">
-                        <span class="author mr-2"><img src="{{$post->author->avatar}}" alt="Colorlib"> 3</span>
-                        <span class="mr-2">{{$post->created_at}}</span>
-                        <span class="ml-2"><span class="fa fa-comments"></span> {{$post->category->name}}</span>
+                        <span class="author "><img src="{{$post->author->getImage()}}" alt="Colorlib"></span>
+                        <span class="ml-2">Date:{{$post->getDate()}}</span>
+                        <span class="ml-2">Category:{{$post->category->name}}</span>
+                        <span class="ml-2"><span class="fa fa-comments"></span>-{{$post->comments()->count()}}</span>
                       </div>
-                      <h2>{{$post->title}}</h2>
+                        <p>
+                            Auther:{{$post->author->name}}
+                        </p>
+                      <h2>Title:{{$post->title}}</h2>
                     </div>
                   </a>
                 </div>

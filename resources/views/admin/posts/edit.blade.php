@@ -19,62 +19,92 @@
                         <h5 class="card-title">Add Posts</h5>
 
                         <!-- General Form Elements -->
-                        <form action="/admin/posts/{{$post->id}}" method="put" enctype="multipart/form-data">
+                        <form action="{{route('posts.update', [$post->id])}}" method="post"
+                              enctype="multipart/form-data">
+                            @method('put')
+                            @csrf
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Title:</label>
                                 <div class="col-sm-10">
-                                    <input name="title" type="text" class="form-control">
+                                    <input name="title" value="{{$post->title}}" type="text" class="form-control">
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="row mb-3">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Description:</label>
+                                <div class="col-sm-10">
+                                    <textarea name="description" class="form-control"
+                                              style="height: 100px">{{$post->description}}</textarea>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Content:</label>
-                                <div class="card-body">
-                                {{--                                <h5 class="card-title">Content:</h5>--}}
-                                <!-- Quill Editor Default -->
-                                    <div id="text-editor" class="quill-editor-default">
-                                        <p>Hello World!</p>
-                                        <p>This is Quill <strong>default</strong> editor</p>
-                                    </div>
-                                    <!-- End Quill Editor Default -->
+                                <div class="col-sm-10">
+                                    <textarea name="content" id="default-editor" cols="30" class="form-control"
+                                              rows="10">{{$post->content}}</textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" type="file" id="formFile">
+                                    <img src="{{$post->getImage()}}" alt="" width="150">
+                                    <input name="image" class="form-control" type="file" id="formFile">
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <legend class="col-form-label col-sm-2 pt-0">Featured:</legend>
-                                <div class="col-sm-10">
 
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                        <label class="form-check-label" for="gridCheck1">
-                                            ON
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Category:</label>
+                                <label class="col-sm-2 col-form-label">Featured:</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected value="">Null</option>
-                                        <option value="1">IT</option>
-                                        <option value="2">Travel</option>
-                                        <option value="3">Food</option>
+                                    <select name="featured" class="form-select" aria-label="Default select example">
+                                        <option value="0">Off</option>
+                                        <option value="1">On</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label for="inputPassword" class="col-sm-2 col-form-label">Description:</label>
+                                <label class="col-sm-2 col-form-label">Status:</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" style="height: 100px"></textarea>
+                                    <select name="status" class="form-select" aria-label="Default select example">
+                                        <option value="0">Off</option>
+                                        <option value="1">On</option>
+                                    </select>
                                 </div>
                             </div>
-
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Tags:</label>
+                                <div class="col-sm-10">
+                                    <select class="selectpicker" name="tags[]" multiple data-live-search="true"
+                                            data-live-search-placeholder="Search" data-actions-box="true">
+                                        <optgroup label="Selects tags:">
+                                            @foreach($tags as $tag)
+                                                <option value="{{$tag->id}}">{{$tag->title}}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Category:</label>
+                                <div class="col-sm-10">
+                                    <select name="category_id" class="form-select" aria-label="Default select example">
+                                        @if($post->hasCategory())
+                                            <option selected
+                                                    value="{{$post->category->id}}">{{$post->category->name}}</option>
+                                        @else
+                                            <option selected value="">Null</option>
+                                        @endif
+                                        @foreach($categories as $category)
+                                            <option value="{{$category->id}}">{{$category->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputDate" class="col-sm-2 col-form-label">Date:</label>
+                                <div class="col-sm-10">
+                                    <input name="date" value="{{$post->date}}" type="date" class="form-control">
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label"></label>
                                 <div class="col-sm-10">

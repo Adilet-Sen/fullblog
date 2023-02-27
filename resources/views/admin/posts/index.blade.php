@@ -28,35 +28,58 @@
                                 <th scope="col">Category</th>
                                 <th scope="col">User</th>
                                 <th scope="col">Featured</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Views count</th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($posts as $post)
-                            <tr>
-                                <td scope="row">{{$post->id}}</td>
-                                <td>2023-3-18</td>
-                                <td><img src="{{$post->image}}" alt="" width="50"></td>
-                                <td>{{$post->title}}</td>
-                                <td>{{$post->description}}</td>
-                                <td>{{$post->category->name}}</td>
-                                <td>{{$post->author->name}}</td>
-                                <td>
-                                    @if($post->featured)
-                                        <i class="bi bi-bookmark-star-fill"></i>
-                                    @else
-                                        <i class="bi bi-bookmark-x-fill"></i>
-                                    @endif
-                                </td>
-                                <td>
-                                    {{$post->views}}
-                                </td>
-                                <td>
-                                    <a href="/admin/posts/{{$post->id}}/edit/" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                    <a href="/admin/posts/{{$post->id}}/delete" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td scope="row">{{$post->id}}</td>
+                                    <td>2023-3-18</td>
+                                    <td><img src="/{{$post->getImage()}}" alt="" width="50"></td>
+                                    <td>{{$post->title}}</td>
+                                    <td>{{$post->description}}</td>
+                                    <td>@if($post->hasCategory())  {{$post->category->name}} @else Category
+                                        disable!@endif</td>
+                                    <td>{{$post->getAuthorName()}}</td>
+                                    <td>
+                                        @if($post->featured)
+                                            <button class="btn btn-success">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-danger">
+                                                <i class="bi bi-x-circle-fill"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($post->status)
+                                            <a href="/admin/posts/switch/{{$post->id}}" class="btn btn-success"><i
+                                                    class="bi bi-check-circle-fill"></i></a>
+                                        @else
+                                            <a href="/admin/posts/switch/{{$post->id}}/true" class="btn btn-danger"><i
+                                                    class="bi bi-x-circle-fill"></i></a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{$post->views}}
+                                    </td>
+                                    <td>
+                                        <form class="d-flex align-items-center"
+                                              action="{{route('posts.destroy', [$post->id])}}" method="POST">
+                                            <a href="/admin/posts/{{$post->id}}/edit" class="btn btn-warning"><i
+                                                    class="bi bi-pencil-fill"></i></a>
+                                            @method('delete')
+                                            @csrf
+
+                                            <button type="submit" onclick="return confirm('Are you sure?')"
+                                                    class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>

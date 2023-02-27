@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    const ADMIN = 1;
+    const ADMIN = 2;
     const BAN = 0;
     const ACTIVE = 1;
     /**
@@ -53,7 +53,7 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function getFirstPost(){
+    public static function getFirstPost(){
         return Post::find(self::ADMIN);
     }
 
@@ -94,9 +94,7 @@ class User extends Authenticatable
 
         $this->removeAvatar();
 
-        $filename = str_random(10) . '.' . $image->extension();
-        $image->storeAs('uploads', $filename);
-        $this->avatar = $filename;
+        $this->avatar = $image->store('uploads');
         $this->save();
     }
 
@@ -104,7 +102,7 @@ class User extends Authenticatable
     {
         if($this->avatar != null)
         {
-            Storage::delete('uploads/' . $this->avatar);
+            self::delete($this->avatar);
         }
     }
 
@@ -115,7 +113,7 @@ class User extends Authenticatable
             return '/img/no-image.png';
         }
 
-        return '/uploads/' . $this->avatar;
+        return $this->avatar;
     }
 
     public function makeAdmin()

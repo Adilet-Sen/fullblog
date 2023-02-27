@@ -5,13 +5,12 @@
             <div class="form-group">
                 <span class="icon fa fa-search"></span>
                 <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter ">
-
             </div>
         </form>
     </div>
     <div class="sidebar-box">
         <div class="bio text-center">
-            <img src="{{$admin->author->avatar}}" alt="Image Placeholder" class="img-fluid">
+            <img src="/{{$admin->author->avatar}}" alt="Image Placeholder" class="img-fluid">
             <div class="bio-body">
                 <h2>{{$admin->author->name}}</h2>
                 <p>{{$admin->content}}</p>
@@ -31,12 +30,12 @@
             <ul>
                 @foreach($topPosts as $post)
                     <li>
-                        <a href="">
-                            <img src="{{$post->image}}" alt="Image placeholder" class="mr-4">
+                        <a href="{{url('articles')}}/{{$post->slug}}">
+                            <img src="/{{$post->image}}" alt="Image placeholder" class="mr-4">
                             <div class="text">
                                 <h4>{{$post->title}}</h4>
                                 <div class="post-meta">
-                                    <span class="mr-2">{{$post->created_at}}</span>
+                                    <span class="mr-2">{{$post->getDate()}}</span>
                                 </div>
                             </div>
                         </a>
@@ -48,8 +47,8 @@
     <div class="sidebar-box">
         <h3 class="heading">Categories</h3>
         <ul class="categories">
-            @foreach($categories->toTree() as $cat)
-            <li><a href="/category/{{$cat->slug}}">{{$cat->name}} <span>({{$cat->posts()->count()}})</span></a></li>
+            @foreach($categories as $cat)
+            <li><a href="/category/{{$cat->slug}}">{{$cat->name}} <span>({{$cat->posts()->active()->count()}})</span></a></li>
             @endforeach
         </ul>
     </div>

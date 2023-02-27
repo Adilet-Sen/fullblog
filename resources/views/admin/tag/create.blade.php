@@ -30,7 +30,7 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-success">Save</button>
+                                <button type="submit" class="btn btn-success">Add</button>
                             </div>
                         </div>
 

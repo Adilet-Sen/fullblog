@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\TagsRequest;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 
 class TagsController extends Controller
 {
@@ -34,7 +34,7 @@ class TagsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TagsRequest $request)
     {
         Tag::create($request->all());
         return redirect()->back();
@@ -57,9 +57,9 @@ class TagsController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tag $tag)
+    public function edit($id)
     {
-        return view('admin.tag.edit');
+        return view('admin.tag.edit', ['tag'=>Tag::find($id)]);
     }
 
     /**
@@ -69,9 +69,13 @@ class TagsController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(TagsRequest $request, $id)
     {
-        //
+        $category = Tag::find($id);
+
+        $category->update($request->all());
+
+        return redirect()->route('tags.index');
     }
 
     /**
@@ -80,8 +84,9 @@ class TagsController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy($id)
     {
-        //
+        Tag::find($id)->delete();
+        return redirect()->back();
     }
 }

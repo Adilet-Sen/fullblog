@@ -19,61 +19,13 @@
                         <h5 class="card-title">Add Posts</h5>
 
                         <!-- General Form Elements -->
-                        <form>
+                        <form action="{{route('tags.update', [$tag->id])}}" method="post">
+                            @method('put')
+                            @csrf
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Title:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="card">
-                                <label for="inputText" class="col-sm-2 col-form-label">Content:</label>
-                                <div class="card-body">
-                                {{--                                <h5 class="card-title">Content:</h5>--}}
-
-                                <!-- Quill Editor Default -->
-                                    <div class="quill-editor-default">
-                                        <p>Hello World!</p>
-                                        <p>This is Quill <strong>default</strong> editor</p>
-                                    </div>
-                                    <!-- End Quill Editor Default -->
-
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" type="file" id="formFile">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <legend class="col-form-label col-sm-2 pt-0">Featured:</legend>
-                                <div class="col-sm-10">
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                        <label class="form-check-label" for="gridCheck1">
-                                            ON
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Category:</label>
-                                <div class="col-sm-10">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected value="">Null</option>
-                                        <option value="1">IT</option>
-                                        <option value="2">Travel</option>
-                                        <option value="3">Food</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label for="inputPassword" class="col-sm-2 col-form-label">Description:</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" style="height: 100px"></textarea>
+                                    <input name="title" value="{{$tag->title}}" type="text" class="form-control">
                                 </div>
                             </div>
 

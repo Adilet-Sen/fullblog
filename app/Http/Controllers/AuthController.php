@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Http\Requests\Admin\AuthRequest;
+use App\Http\Requests\Admin\RegisterAuthRequest;
 
 class AuthController extends Controller
 {
@@ -12,14 +14,8 @@ class AuthController extends Controller
         return view('pages.register');
     }
 
-    public function register(Request $request)
+    public function register(RegisterAuthRequest $request)
     {
-        $this->validate($request, [
-            'name'	=>	'required',
-            'email'	=>	'required|email|unique:users',
-            'password'	=>	'required'
-        ]);
-
         $user = User::add($request->all());
         $user->generatePassword($request->get('password'));
 
@@ -31,13 +27,8 @@ class AuthController extends Controller
         return view('pages.login');
     }
 
-    public function login(Request $request)
+    public function login(AuthRequest $request)
     {
-        $this->validate($request, [
-            'email'	=>	'required|email',
-            'password'	=>	'required'
-        ]);
-
         if(Auth::attempt([
             'email'	=>	$request->get('email'),
             'password'	=>	$request->get('password')
@@ -46,7 +37,7 @@ class AuthController extends Controller
             return redirect('/');
         }
 
-        return redirect()->back()->with('status', 'Неправильный логин или пароль');
+        return redirect()->back()->with('status', 'Incorrect login or password!');
     }
 
     public function logout()

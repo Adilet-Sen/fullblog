@@ -31,8 +31,12 @@
                                 <th scope="row">{{$tag->id}}</th>
                                 <td>{{$tag->title}}</td>
                                 <td>
-                                    <a href="/admin/posts/edit/" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                    <a href="/admin/posts/edit/" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                    <form class="d-flex align-items-center" method="POST" action="{{route('tags.destroy', [$tag->id])}}">
+                                        <a href="{{route('tags.edit',[$tag->id])}}" class="btn btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                        @method('delete')
+                                        @csrf
+                                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

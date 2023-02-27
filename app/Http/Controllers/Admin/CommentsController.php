@@ -68,9 +68,9 @@ class CommentsController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update($id)
     {
-        //
+
     }
 
     /**
@@ -79,8 +79,17 @@ class CommentsController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        Comment::find($id)->delete_com();
+        return redirect()->back();
+    }
+
+    public function switch($id)
+    {
+        $comment = Comment::find($id);
+        $comment->switchingStatus();
+
+        return redirect()->back();
     }
 }
